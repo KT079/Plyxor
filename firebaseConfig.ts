@@ -1,28 +1,19 @@
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
-// Firebase Configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCvHL2-rOuXMZUDYW17sr_xT8VtNW4z_40",
-  authDomain: "plyxor-4aea2.firebaseapp.com",
-  projectId: "plyxor-4aea2",
-  storageBucket: "plyxor-4aea2.firebasestorage.app",
-  messagingSenderId: "304206955618",
-  appId: "1:304206955618:web:b9814f6ee248ce9bf2fd3b",
-  measurementId: "G-NE76YSN5QP"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
 let app;
-let db: any = null;
-let auth: any = null;
 
-try {
+if (!getApps().length && firebaseConfig.apiKey) {
   app = initializeApp(firebaseConfig);
-  db = getFirestore(app);
-  auth = getAuth(app);
-} catch (error) {
-  console.warn("Firebase initialization failed. App will run in Demo Mode.", error);
 }
 
-export { db, auth };
+export const auth = app ? getAuth(app) : null;
+export const db = app ? getFirestore(app) : null;
